@@ -45,7 +45,10 @@ set completeopt=noinsert,menuone,noselect
 " plugins
 call plug#begin($HOME . '/config/nvim/plugged')
   " autocomplete
-  Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
+  Plug 'neoclide/coc.nvim', { 'do': 'yarn install --frozen-lockfile' }
+
+  " linting
+  Plug 'w0rp/ale'
 
   " fzf
   Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -60,18 +63,21 @@ call plug#begin($HOME . '/config/nvim/plugged')
   Plug 'tpope/vim-vinegar'
   Plug 'tpope/vim-rails'
 
+  " javascript
+  Plug 'othree/yajs.vim'
+  Plug 'jelera/vim-javascript-syntax'
+  Plug 'MaxMEllon/vim-jsx-pretty'
+
   " languages
   Plug 'ElmCast/elm-vim'
   Plug 'ekalinin/Dockerfile.vim'
   Plug 'elixir-editors/vim-elixir'
   Plug 'hashivim/vim-terraform'
-  Plug 'jelera/vim-javascript-syntax'
   Plug 'martinda/Jenkinsfile-vim-syntax'
-  Plug 'mxw/vim-jsx'
-  Plug 'pangloss/vim-javascript'
   Plug 'rust-lang/rust.vim'
   Plug 'vim-ruby/vim-ruby'
   Plug 'vim-scripts/groovy.vim'
+  Plug 'cespare/vim-toml'
 
   Plug 'fatih/vim-go', {
     \ 'do': ':GoInstallBinaries'
@@ -85,27 +91,28 @@ call plug#begin($HOME . '/config/nvim/plugged')
   Plug 'christoomey/vim-tmux-navigator'
 
   Plug 'itchyny/lightline.vim'
-  Plug 'nanotech/jellybeans.vim'
+  Plug 'dracula/vim', { 'as': 'dracula' }
 call plug#end()
 
 " configure coc extensions
 call coc#add_extension(
+      \ 'coc-css',
+      \ 'coc-html',
       \ 'coc-json',
+      \ 'coc-python',
+      \ 'coc-rls',
+      \ 'coc-solargraph',
       \ 'coc-tsserver',
       \ 'coc-yaml',
-      \ 'coc-solargraph',
-      \ 'coc-rls',
-      \ 'coc-python',
-      \ 'coc-html',
-      \ 'coc-css',
       \)
 
-" theme
+" color scheme
 if (has("termguicolors"))
   set termguicolors
 endif
 
-colorscheme jellybeans
+set background=dark
+colorscheme dracula
 
 " python remote plugin
 let g:python_host_prog='/usr/local/bin/python2'
@@ -141,9 +148,6 @@ nnoremap <silent> N Nzz
 
 nnoremap <silent> <c-d> <c-d>zz
 nnoremap <silent> <c-u> <c-u>zz
-
-" Rg the word under the cursor
-nnoremap <silent> <leader>* :Rg "\b<C-R><C-W>\b"<CR>:cw<CR>
 
 noremap <silent> <leader>sy "*y
 
@@ -184,6 +188,45 @@ function! s:show_documentation()
   endif
 endfunction
 
+" ale
+let g:ale_sign_column_always = 1
+let g:ale_linters_explicit = 1
+let g:ale_fix_on_save = 1
+let g:ale_lint_on_text_changed = 0
+let g:ale_lint_on_insert_leave = 1
+let g:ale_set_highlights = 0
+
+let g:ale_sign_warning = ''
+let g:ale_sign_error = ''
+
+let g:ale_rust_cargo_use_clippy = executable('cargo-clippy')
+
+let g:ale_linters = {
+  \ 'elixir': ['credo'],
+  \ 'go': ['gometalinter'],
+  \ 'javascript': ['eslint'],
+  \ 'python': ['flake8'],
+  \ 'ruby': ['rubocop'],
+  \ 'rust': ['cargo'],
+  \ }
+
+let g:ale_fixers = {
+  \ '*': ['remove_trailing_lines', 'trim_whitespace'],
+  \ 'css': ['prettier'],
+  \ 'elixir': ['mix_format'],
+  \ 'go': ['gofmt', 'goimports'],
+  \ 'html': ['prettier'],
+  \ 'javascript': ['prettier'],
+  \ 'json': ['prettier'],
+  \ 'markdown': ['prettier'],
+  \ 'python': ['isort', 'black'],
+  \ 'ruby': ['rubocop', 'rufo'],
+  \ 'rust': ['rustfmt'],
+  \ 'scss': ['prettier'],
+  \ 'typescript': ['prettier'],
+  \ 'yaml': ['prettier'],
+  \ }
+
 " gutentags
 let g:gutentags_exclude_filetypes = ['gitcommit', 'vim']
 
@@ -192,7 +235,7 @@ let g:signify_vcs_list = ['git']
 
 " lightline
 let g:lightline = {
-  \ 'colorscheme': 'jellybeans',
+  \ 'colorscheme': 'dracula',
   \ 'active': {
   \   'left': [['mode', 'paste'],
   \            ['cocstatus', 'fugitive', 'filename', 'filetype']],
@@ -250,6 +293,7 @@ nnoremap <silent> <leader>p :call fzf#run({ 'source': 'rg --files', 'sink': 'e',
 
 " rg
 nnoremap <leader>a :Rg<space>
+nnoremap <silent> <leader>* :Rg "\b<C-R><C-W>\b"<CR>:cw<CR>
 
 " format json
 nnoremap <leader>j :%!python -m json.tool<cr>
