@@ -21,6 +21,11 @@ set lazyredraw
 set noshowmode
 set cursorline
 
+" search settings
+set ignorecase
+set smartcase
+set incsearch
+
 set noerrorbells visualbell t_vb=
 
 " disable automatic commenting
@@ -67,6 +72,7 @@ call plug#begin($HOME . '/config/nvim/plugged')
   Plug 'othree/yajs.vim'
   Plug 'jelera/vim-javascript-syntax'
   Plug 'MaxMEllon/vim-jsx-pretty'
+  Plug 'leafgarland/typescript-vim'
 
   " languages
   Plug 'ElmCast/elm-vim'
@@ -91,7 +97,8 @@ call plug#begin($HOME . '/config/nvim/plugged')
   Plug 'christoomey/vim-tmux-navigator'
 
   Plug 'itchyny/lightline.vim'
-  Plug 'dracula/vim', { 'as': 'dracula' }
+  Plug 'challenger-deep-theme/vim', { 'as': 'challenger-deep' }
+
 call plug#end()
 
 " configure coc extensions
@@ -112,7 +119,8 @@ if (has("termguicolors"))
 endif
 
 set background=dark
-colorscheme dracula
+syntax enable
+colorscheme challenger_deep
 
 " python remote plugin
 let g:python_host_prog='/usr/local/bin/python2'
@@ -235,7 +243,7 @@ let g:signify_vcs_list = ['git']
 
 " lightline
 let g:lightline = {
-  \ 'colorscheme': 'dracula',
+  \ 'colorscheme': 'challenger_deep',
   \ 'active': {
   \   'left': [['mode', 'paste'],
   \            ['cocstatus', 'fugitive', 'filename', 'filetype']],
