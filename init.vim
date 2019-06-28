@@ -104,6 +104,7 @@ call plug#end()
 " configure coc extensions
 call coc#add_extension(
       \ 'coc-css',
+      \ 'coc-elixir',
       \ 'coc-html',
       \ 'coc-json',
       \ 'coc-python',
