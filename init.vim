@@ -86,7 +86,7 @@ call plug#begin($HOME . '/config/nvim/plugged')
   Plug 'cespare/vim-toml'
 
   Plug 'fatih/vim-go', {
-    \ 'do': ':GoInstallBinaries'
+    \ 'do': ':GoUpdateBinaries'
     \ }
 
   " utilities
