@@ -1,5 +1,5 @@
 {
-  "python.pythonPath": "/usr/local/miniconda3/bin/python",
+  "python.pythonPath": "/Users/trevor/.pyenv/shims/python",
   "python.jediEnabled": true,
   "python.formatting.provider": "none",
   "python.sortImports.path": "none",
