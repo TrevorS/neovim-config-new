@@ -98,6 +98,7 @@ call plug#begin($HOME . '/config/nvim/plugged')
 
   Plug 'itchyny/lightline.vim'
   Plug 'challenger-deep-theme/vim', { 'as': 'challenger-deep' }
+  Plug 'tyrannicaltoucan/vim-quantum'
 
 call plug#end()
 
@@ -109,6 +110,7 @@ call coc#add_extension(
       \ 'coc-json',
       \ 'coc-python',
       \ 'coc-rls',
+      \ 'coc-snippets',
       \ 'coc-solargraph',
       \ 'coc-tsserver',
       \ 'coc-yaml',
@@ -121,7 +123,9 @@ endif
 
 set background=dark
 syntax enable
-colorscheme challenger_deep
+let g:quantum_black = 1
+let g:quantum_italics = 1
+colorscheme quantum
 
 " python remote plugin
 let g:python_host_prog='/usr/local/bin/python2'
@@ -244,7 +248,7 @@ let g:signify_vcs_list = ['git']
 
 " lightline
 let g:lightline = {
-  \ 'colorscheme': 'challenger_deep',
+  \ 'colorscheme': 'quantum',
   \ 'active': {
   \   'left': [['mode', 'paste'],
   \            ['cocstatus', 'fugitive', 'filename', 'filetype']],
