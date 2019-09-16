@@ -48,7 +48,7 @@ set signcolumn=yes
 set completeopt=noinsert,menuone,noselect
 
 " plugins
-call plug#begin($HOME . '/config/nvim/plugged')
+call plug#begin($HOME . '/.config/nvim/plugged')
   " autocomplete
   Plug 'neoclide/coc.nvim', { 'do': 'yarn install --frozen-lockfile' }
 
