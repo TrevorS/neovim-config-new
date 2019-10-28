@@ -112,6 +112,7 @@ call coc#add_extension(
       \ 'coc-rls',
       \ 'coc-snippets',
       \ 'coc-solargraph',
+      \ 'coc-tabnine',
       \ 'coc-tsserver',
       \ 'coc-yaml',
       \)
@@ -135,6 +136,7 @@ let g:python3_host_prog='/Users/trevor/.pyenv/shims/python'
 let mapleader = "\<Space>"
 
 nnoremap <silent> <leader>ea :edit $HOME/.config/alacritty/alacritty.yml<cr>
+nnoremap <silent> <leader>es :edit $HOME/.config/starship.toml<cr>
 nnoremap <silent> <leader>et :edit $HOME/.tmux.conf<cr>
 nnoremap <silent> <leader>ez :edit $HOME/.zshrc<cr>
 nnoremap <silent> <leader>ev :edit $MYVIMRC<cr>
