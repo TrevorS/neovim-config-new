@@ -73,6 +73,7 @@ call plug#begin($HOME . '/.config/nvim/plugged')
   Plug 'jelera/vim-javascript-syntax'
   Plug 'MaxMEllon/vim-jsx-pretty'
   Plug 'leafgarland/typescript-vim'
+  Plug 'ianks/vim-tsx'
 
   " languages
   Plug 'ElmCast/elm-vim'
@@ -223,6 +224,7 @@ let g:ale_linters = {
   \ 'python': ['flake8'],
   \ 'ruby': ['rubocop'],
   \ 'rust': ['cargo'],
+  \ 'typescript': ['tsserver --jsx', 'tslint'],
   \ }
 
 let g:ale_fixers = {
@@ -238,7 +240,7 @@ let g:ale_fixers = {
   \ 'ruby': ['rubocop', 'rufo'],
   \ 'rust': ['rustfmt'],
   \ 'scss': ['prettier'],
-  \ 'typescript': ['prettier'],
+  \ 'typescript': ['tslint', 'prettier'],
   \ 'yaml': ['prettier'],
   \ }
 
