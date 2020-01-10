@@ -55,9 +55,8 @@ call plug#begin($HOME . '/.config/nvim/plugged')
   " linting
   Plug 'w0rp/ale'
 
-  " fzf
-  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-  Plug 'junegunn/fzf.vim'
+  " finding
+  Plug 'liuchengxu/vim-clap', { 'do': function('clap#helper#build_all') }
 
   " tpope
   Plug 'tpope/vim-commentary'
@@ -91,7 +90,6 @@ call plug#begin($HOME . '/.config/nvim/plugged')
     \ }
 
   " utilities
-  Plug 'jremmen/vim-ripgrep'
   Plug 'sgur/vim-editorconfig'
   Plug 'ludovicchabant/vim-gutentags'
   Plug 'mhinz/vim-signify'
@@ -131,7 +129,7 @@ colorscheme quantum
 
 " python remote plugin
 let g:python_host_prog='/usr/local/bin/python2'
-let g:python3_host_prog='/Users/trevor/.pyenv/shims/python'
+let g:python3_host_prog='/Users/trevor/.pyenv/shims/python3.8'
 
 " standard keybindings
 let mapleader = "\<Space>"
@@ -218,7 +216,7 @@ let g:ale_sign_error = ''
 let g:ale_rust_cargo_use_clippy = executable('cargo-clippy')
 
 let g:ale_linters = {
-  \ 'elixir': ['credo'],
+  \ 'elixir': ['credo', 'elixir-ls', 'dialyxir'],
   \ 'go': ['gometalinter'],
   \ 'javascript': ['eslint'],
   \ 'python': ['flake8'],
@@ -305,12 +303,10 @@ function! LightLineFugitive()
   return strlen(_) ? ' '._ : ''
 endfunction
 
-" fzf
-nnoremap <silent> <leader>p :call fzf#run({ 'source': 'rg --files', 'sink': 'e', 'window': 'enew' })<cr>
-
-" rg
-nnoremap <leader>a :Rg<space>
-nnoremap <silent> <leader>* :Rg "\b<C-R><C-W>\b"<CR>:cw<CR>
+" find files
+nnoremap <silent> <leader>p :Clap files<CR>
+nnoremap <silent> <leader>a :Clap grep<CR>
+nnoremap <silent> <leader>* :Clap grep ++query=<cword><CR>
 
 " format json
 nnoremap <leader>j :%!python -m json.tool<cr>
