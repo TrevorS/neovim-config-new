@@ -56,7 +56,7 @@ call plug#begin($HOME . '/.config/nvim/plugged')
   Plug 'w0rp/ale'
 
   " finding
-  Plug 'liuchengxu/vim-clap', { 'do': function('clap#helper#build_all') }
+  Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary' }
 
   " tpope
   Plug 'tpope/vim-commentary'
@@ -84,6 +84,7 @@ call plug#begin($HOME . '/.config/nvim/plugged')
   Plug 'vim-ruby/vim-ruby'
   Plug 'vim-scripts/groovy.vim'
   Plug 'cespare/vim-toml'
+  Plug 'lifepillar/pgsql.vim'
 
   Plug 'fatih/vim-go', {
     \ 'do': ':GoUpdateBinaries'
@@ -128,8 +129,11 @@ let g:quantum_italics = 1
 colorscheme quantum
 
 " python remote plugin
-let g:python_host_prog='/usr/local/bin/python2'
-let g:python3_host_prog='/Users/trevor/.pyenv/shims/python3.8'
+let g:python_host_prog='/Users/trevorstrieber/.pyenv/shims/python2.7'
+let g:python3_host_prog='/Users/trevorstrieber/.pyenv/shims/python3.8'
+
+" pgsql config
+let g:sql_type_default = 'pgsql'
 
 " standard keybindings
 let mapleader = "\<Space>"
