@@ -73,6 +73,7 @@ call plug#begin($HOME . '/.config/nvim/plugged')
   Plug 'MaxMEllon/vim-jsx-pretty'
   Plug 'leafgarland/typescript-vim'
   Plug 'ianks/vim-tsx'
+  Plug 'evanleck/vim-svelte'
 
   " languages
   Plug 'ElmCast/elm-vim'
@@ -91,6 +92,7 @@ call plug#begin($HOME . '/.config/nvim/plugged')
     \ }
 
   " utilities
+  Plug 'andymass/vim-matchup'
   Plug 'sgur/vim-editorconfig'
   Plug 'ludovicchabant/vim-gutentags'
   Plug 'mhinz/vim-signify'
@@ -106,12 +108,14 @@ call plug#end()
 call coc#add_extension(
       \ 'coc-css',
       \ 'coc-elixir',
+      \ 'coc-highlight',
       \ 'coc-html',
       \ 'coc-json',
       \ 'coc-python',
       \ 'coc-rls',
       \ 'coc-snippets',
       \ 'coc-solargraph',
+      \ 'coc-svelte',
       \ 'coc-tabnine',
       \ 'coc-tsserver',
       \ 'coc-yaml',
@@ -191,20 +195,41 @@ endfunction
 " Use <c-space> for trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh()
 
-" Use <cr> for confirm completion, `<C-g>u` means break undo chain at current position.
-" Coc only does snippet and additional edit on confirm.
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
+" position. Coc only does snippet and additional edit on confirm.
+if has('patch8.1.1068')
+  " Use `complete_info` if your (Neo)Vim version supports it.
+  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+else
+  imap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+endif
+
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
 
 " Use K for show documentation in preview window
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
-  if &filetype == 'vim'
+  if (index(['vim','help'], &filetype) >= 0)
     execute 'h '.expand('<cword>')
   else
     call CocAction('doHover')
   endif
 endfunction
+
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Symbol renaming.
+nmap <leader>rn <Plug>(coc-rename)
+
+" Formatting selected code.
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
 
 " ale
 let g:ale_sign_column_always = 1
@@ -223,6 +248,7 @@ let g:ale_linters = {
   \ 'elixir': ['credo', 'elixir-ls', 'dialyxir'],
   \ 'go': ['gometalinter'],
   \ 'javascript': ['eslint'],
+  \ 'javascriptreact': ['eslint'],
   \ 'python': ['flake8'],
   \ 'ruby': ['rubocop'],
   \ 'rust': ['cargo'],
@@ -233,9 +259,11 @@ let g:ale_fixers = {
   \ '*': ['remove_trailing_lines', 'trim_whitespace'],
   \ 'css': ['prettier'],
   \ 'elixir': ['mix_format'],
+  \ 'elm': ['elm-format', 'format'],
   \ 'go': ['gofmt', 'goimports'],
   \ 'html': ['prettier'],
   \ 'javascript': ['prettier'],
+  \ 'javascriptreact': ['prettier'],
   \ 'json': ['prettier'],
   \ 'markdown': ['prettier'],
   \ 'python': ['isort', 'black'],
@@ -284,6 +312,9 @@ let g:lightline = {
 let g:lightline#ale#indicator_warnings = ' '
 let g:lightline#ale#indicator_errors = ' '
 
+" Use autocmd to force lightline update.
+autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
+
 function! LightLineMode()
   return winwidth(0) > 60 ? lightline#mode() : ''
 endfunction
@@ -307,10 +338,13 @@ function! LightLineFugitive()
   return strlen(_) ? ' '._ : ''
 endfunction
 
-" find files
+" vim-clap / find files
 nnoremap <silent> <leader>p :Clap files<CR>
 nnoremap <silent> <leader>a :Clap grep<CR>
 nnoremap <silent> <leader>* :Clap grep ++query=<cword><CR>
+
+" esc closes vim-clap
+let g:clap_insert_mode_only = v:true
 
 " format json
 nnoremap <leader>j :%!python -m json.tool<cr>

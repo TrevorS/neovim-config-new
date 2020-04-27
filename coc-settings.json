@@ -24,5 +24,7 @@
         "elmTestPath": "elm-test"
       }
     }
-  }
+  },
+
+  "svelte.plugin.typescript.diagnostics.enable": false
 }
