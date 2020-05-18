@@ -50,13 +50,13 @@ set completeopt=noinsert,menuone,noselect
 " plugins
 call plug#begin($HOME . '/.config/nvim/plugged')
   " autocomplete
-  Plug 'neoclide/coc.nvim', { 'do': 'yarn install --frozen-lockfile' }
+  Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 
   " linting
   Plug 'w0rp/ale'
 
   " finding
-  Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary' }
+  Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
 
   " tpope
   Plug 'tpope/vim-commentary'
@@ -94,13 +94,12 @@ call plug#begin($HOME . '/.config/nvim/plugged')
   " utilities
   Plug 'andymass/vim-matchup'
   Plug 'sgur/vim-editorconfig'
-  Plug 'ludovicchabant/vim-gutentags'
   Plug 'mhinz/vim-signify'
   Plug 'christoomey/vim-tmux-navigator'
 
+  " aesthetics
   Plug 'itchyny/lightline.vim'
-  Plug 'challenger-deep-theme/vim', { 'as': 'challenger-deep' }
-  Plug 'tyrannicaltoucan/vim-quantum'
+  Plug 'ayu-theme/ayu-vim'
 
 call plug#end()
 
@@ -112,7 +111,7 @@ call coc#add_extension(
       \ 'coc-html',
       \ 'coc-json',
       \ 'coc-python',
-      \ 'coc-rls',
+      \ 'coc-rust-analyzer',
       \ 'coc-snippets',
       \ 'coc-solargraph',
       \ 'coc-svelte',
@@ -122,15 +121,12 @@ call coc#add_extension(
       \)
 
 " color scheme
-if (has("termguicolors"))
-  set termguicolors
-endif
-
+set termguicolors
 set background=dark
 syntax enable
-let g:quantum_black = 1
-let g:quantum_italics = 1
-colorscheme quantum
+
+let ayucolor='dark'
+colorscheme ayu
 
 " python remote plugin
 let g:python_host_prog='/Users/trevorstrieber/.pyenv/shims/python2.7'
@@ -197,11 +193,11 @@ inoremap <silent><expr> <c-space> coc#refresh()
 
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
 " position. Coc only does snippet and additional edit on confirm.
-if has('patch8.1.1068')
-  " Use `complete_info` if your (Neo)Vim version supports it.
+" <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
+if exists('*complete_info')
   inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
 else
-  imap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 endif
 
 " GoTo code navigation.
@@ -227,9 +223,19 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
 
+" Applying codeAction to the selected region.
+" Example: `<leader>aap` for current paragraph
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+" Remap keys for applying codeAction to the current line.
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Apply AutoFix to problem on the current line.
+nmap <leader>qf  <Plug>(coc-fix-current)
+
 " Formatting selected code.
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+xmap <leader>f <Plug>(coc-format-selected)
+nmap <leader>f <Plug>(coc-format-selected)
 
 " ale
 let g:ale_sign_column_always = 1
@@ -239,8 +245,8 @@ let g:ale_lint_on_text_changed = 0
 let g:ale_lint_on_insert_leave = 1
 let g:ale_set_highlights = 0
 
-let g:ale_sign_warning = ''
-let g:ale_sign_error = ''
+let g:ale_sign_warning = '!'
+let g:ale_sign_error = 'X'
 
 let g:ale_rust_cargo_use_clippy = executable('cargo-clippy')
 
@@ -274,15 +280,12 @@ let g:ale_fixers = {
   \ 'yaml': ['prettier'],
   \ }
 
-" gutentags
-let g:gutentags_exclude_filetypes = ['gitcommit', 'vim']
-
 " signify
 let g:signify_vcs_list = ['git']
 
 " lightline
 let g:lightline = {
-  \ 'colorscheme': 'quantum',
+  \ 'colorscheme': 'ayu_dark',
   \ 'active': {
   \   'left': [['mode', 'paste'],
   \            ['cocstatus', 'fugitive', 'filename', 'filetype']],
@@ -340,7 +343,7 @@ endfunction
 
 " vim-clap / find files
 nnoremap <silent> <leader>p :Clap files<CR>
-nnoremap <silent> <leader>a :Clap grep<CR>
+nnoremap <silent> <leader>g :Clap grep<CR>
 nnoremap <silent> <leader>* :Clap grep ++query=<cword><CR>
 
 " esc closes vim-clap
